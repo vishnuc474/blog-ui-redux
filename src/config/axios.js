@@ -1,7 +1,7 @@
 import Axios from 'axios'
 
 const axios = Axios.create({
-    baseURL: 'http://dct-user-auth.herokuapp.com'
+    baseURL: 'https://jsonplaceholder.typicode.com'
 })
 
 export default axios

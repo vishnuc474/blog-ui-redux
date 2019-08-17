@@ -1,39 +1,53 @@
 import React from 'react'
 import axios from 'axios';
 import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
+import _ from 'lodash'
+import { startSetUser } from '../../action/users';
+
 
 class Users extends React.Component{
-    constructor(props){
-        super(props)
-        this.state={
-        users:[]
-    }}
 
     componentDidMount(){
-        axios.get('https://jsonplaceholder.typicode.com/users')
-        .then (response => {
-            const users= response.data
-            console.log(users)
-            this.setState(()=>({users:users}))
-        })
+         
+            if(_.isEmpty(this.props.users)){
+                this.props.dispatch(startSetUser())
+            }
+            // console.log(users)
+        
     }
 
     render(){
         return(
             <div>
-            <h3>Users list -{this.state.users.length}</h3>
-            <ul>
+            {(this.props.users) ? (
+                <div>
+                <h3>Users list -{this.props.users.length}</h3>
+                <ul>
                 {
-                    this.state.users.map(user=>
+                    this.props.users.map(user=>
                     {return <li key={user.id}>
                     <Link to={`/users/${user.id}`}>{user.name}</Link>
                     </li>})
                 }
-            </ul>
+                </ul>
+                </div>
+            ) : ( <h3>Loading</h3>
 
+            ) }
             </div>
-    
+                
         )
         }
 }
-export default Users
+const mapStateToProps = (state) => {
+    console.log("state", state)
+    return{
+        users: state.users,
+        posts: state.posts,
+        limit: state.limit
+    }
+
+} 
+
+export default connect(mapStateToProps)(Users)
